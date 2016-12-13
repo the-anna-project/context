@@ -1,4 +1,4 @@
-// Package expectation stores and accesses a expectation from and in a
+// Package expectation stores and accesses a expectation in and from a
 // github.com/the-anna-project/context.Context.
 package expectation
 

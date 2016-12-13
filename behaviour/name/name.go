@@ -1,4 +1,4 @@
-// Package name stores and accesses a CLG tree name from and in a
+// Package name stores and accesses a behaviour name in and from a
 // github.com/the-anna-project/context.Context.
 package name
 
@@ -10,7 +10,7 @@ import (
 // collisions with keys defined in other packages.
 type key string
 
-// nameKey is the key for CLG tree name values in
+// nameKey is the key for behaviour name values in
 // github.com/the-anna-project/context.Context. Clients use name.NewContext and
 // name.FromContext instead of using this key directly.
 var nameKey key = "name"
@@ -29,7 +29,7 @@ func NewContext(ctx context.Context, v string) context.Context {
 	return context.WithValue(ctx, nameKey, v)
 }
 
-// FromContext returns the CLG tree name value stored in ctx, if any.
+// FromContext returns the behaviour name value stored in ctx, if any.
 func FromContext(ctx context.Context) (string, bool) {
 	v, ok := ctx.Value(nameKey).(string)
 	return v, ok

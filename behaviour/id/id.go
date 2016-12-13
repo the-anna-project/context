@@ -1,4 +1,4 @@
-// Package id stores and accesses a behaviour ID from and in a
+// Package id stores and accesses a behaviour ID in and from a
 // github.com/the-anna-project/context.Context.
 package id
 

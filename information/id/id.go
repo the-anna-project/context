@@ -1,4 +1,4 @@
-// Package id stores and accesses a information ID from and in a
+// Package id stores and accesses a information ID in and from a
 // github.com/the-anna-project/context.Context.
 package id
 

@@ -1,4 +1,4 @@
-// Package id stores and accesses a CLG tree ID from and in a
+// Package id stores and accesses a CLG tree ID in and from a
 // github.com/the-anna-project/context.Context.
 package id
 
