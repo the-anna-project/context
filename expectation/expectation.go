@@ -3,6 +3,8 @@
 package expectation
 
 import (
+	"github.com/the-anna-project/expectation"
+
 	"github.com/the-anna-project/context"
 )
 
@@ -18,11 +20,8 @@ var expectationKey key = "expectation"
 
 // NewContext returns a new github.com/the-anna-project/context.Context that
 // carries value v.
-//
-/// TODO as soon as we sorted out how an expectation has to look // like we have
-/// to fix the interface here.
-func NewContext(ctx context.Context, v interface{}) context.Context {
-	if v == "" {
+func NewContext(ctx context.Context, v expectation.Expectation) context.Context {
+	if v == nil {
 		// In case the given value is empty we do not add it, but only return the
 		// given context as it is. That way the existence check when reading the
 		// context works as expected when no value or an empty value was tried to be
@@ -34,10 +33,7 @@ func NewContext(ctx context.Context, v interface{}) context.Context {
 }
 
 // FromContext returns the expectation value stored in ctx, if any.
-//
-/// TODO as soon as we sorted out how an expectation has to look // like we have
-/// to fix the interface here.
-func FromContext(ctx context.Context) (interface{}, bool) {
-	v, ok := ctx.Value(expectationKey).(interface{})
+func FromContext(ctx context.Context) (expectation.Expectation, bool) {
+	v, ok := ctx.Value(expectationKey).(expectation.Expectation)
 	return v, ok
 }
