@@ -1,6 +1,6 @@
-// Package name stores and accesses a behaviour name in and from a
+// Package ids stores and accesses a source IDs in and from a
 // github.com/the-anna-project/context.Context.
-package name
+package ids
 
 import (
 	"github.com/the-anna-project/context"
@@ -10,15 +10,15 @@ import (
 // collisions with keys defined in other packages.
 type key string
 
-// nameKey is the key for behaviour name values in
-// github.com/the-anna-project/context.Context. Clients use name.NewContext and
-// name.FromContext instead of using this key directly.
-var nameKey key = "name"
+// idsKey is the key for source IDs values in
+// github.com/the-anna-project/context.Context. Clients use ids.NewContext and
+// ids.FromContext instead of using this key directly.
+var idsKey key = "source-ids"
 
 // NewContext returns a new github.com/the-anna-project/context.Context that
 // carries value v.
-func NewContext(ctx context.Context, v string) context.Context {
-	if v == "" {
+func NewContext(ctx context.Context, v []string) context.Context {
+	if v == nil {
 		// In case the given value is empty we do not add it, but only return the
 		// given context as it is. That way the existence check when reading the
 		// context works as expected when no value or an empty value was tried to be
@@ -26,11 +26,11 @@ func NewContext(ctx context.Context, v string) context.Context {
 		return ctx
 	}
 
-	return context.WithValue(ctx, nameKey, v)
+	return context.WithValue(ctx, idsKey, v)
 }
 
-// FromContext returns the behaviour name value stored in ctx, if any.
-func FromContext(ctx context.Context) (string, bool) {
-	v, ok := ctx.Value(nameKey).(string)
+// FromContext returns the source IDs value stored in ctx, if any.
+func FromContext(ctx context.Context) ([]string, bool) {
+	v, ok := ctx.Value(idsKey).([]string)
 	return v, ok
 }

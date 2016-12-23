@@ -1,4 +1,4 @@
-// Package id stores and accesses a CLG tree ID in and from a
+// Package id stores and accesses a destination ID in and from a
 // github.com/the-anna-project/context.Context.
 package id
 
@@ -10,10 +10,10 @@ import (
 // collisions with keys defined in other packages.
 type key string
 
-// idKey is the key for CLG tree ID values in
+// idKey is the key for destination ID values in
 // github.com/the-anna-project/context.Context. Clients use id.NewContext and
 // id.FromContext instead of using this key directly.
-var idKey key = "clg-tree-id"
+var idKey key = "destination-id"
 
 // NewContext returns a new github.com/the-anna-project/context.Context that
 // carries value v.
@@ -29,7 +29,7 @@ func NewContext(ctx context.Context, v string) context.Context {
 	return context.WithValue(ctx, idKey, v)
 }
 
-// FromContext returns the CLG tree ID value stored in ctx, if any.
+// FromContext returns the destination ID value stored in ctx, if any.
 func FromContext(ctx context.Context) (string, bool) {
 	v, ok := ctx.Value(idKey).(string)
 	return v, ok

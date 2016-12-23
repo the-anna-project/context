@@ -13,7 +13,7 @@ type key string
 // idKey is the key for session ID values in
 // github.com/the-anna-project/context.Context. Clients use id.NewContext and
 // id.FromContext instead of using this key directly.
-var idKey key = "id"
+var idKey key = "session-id"
 
 // NewContext returns a new github.com/the-anna-project/context.Context that
 // carries value v.
