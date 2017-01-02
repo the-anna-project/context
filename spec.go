@@ -1,12 +1,9 @@
 package context
 
 import (
-	nativecontext "context"
-	"encoding/json"
+	"github.com/the-anna-project/context/spec"
 )
 
-type Context interface {
-	nativecontext.Context
-	json.Marshaler
-	json.Unmarshaler
-}
+// Context is a simple redirect to the context specification. That aims to
+// provide a simpler interface for clients using these context packages.
+type Context spec.Context

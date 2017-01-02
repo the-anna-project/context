@@ -28,3 +28,10 @@ var invalidConfigError = errgo.New("invalid config")
 func IsInvalidConfig(err error) bool {
 	return errgo.Cause(err) == invalidConfigError
 }
+
+var invalidContextError = errgo.New("invalid context")
+
+// IsInvalidContext asserts invalidContextError.
+func IsInvalidContext(err error) bool {
+	return errgo.Cause(err) == invalidContextError
+}
