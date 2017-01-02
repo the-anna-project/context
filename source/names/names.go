@@ -18,7 +18,7 @@ var namesKey key = "source-names"
 // NewContext returns a new github.com/the-anna-project/context.Context that
 // carries value v.
 func NewContext(ctx context.Context, v []string) context.Context {
-	if v == nil {
+	if len(v) == 0 {
 		// In case the given value is empty we do not add it, but only return the
 		// given context as it is. That way the existence check when reading the
 		// context works as expected when no value or an empty value was tried to be
