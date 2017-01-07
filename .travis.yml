@@ -6,14 +6,28 @@ go:
 - 1.7
 
 install:
-  - go get -d -v ./...
+  - go get -d -t -v ./...
   - go build ./...
 
-# Travis CI executes go test by default in case there is no script phase
-# defined. Therefore we need to define something to not run tests, because there
-# are none.
 script:
-- echo "no tests to run"
+- go test -race -covermode=atomic -coverprofile=currentbehaviour.txt ./current/behaviour
+- cat currentbehaviour.txt >> coverage.txt
+- go test -race -covermode=atomic -coverprofile=currentclgtree.txt ./current/clg/tree
+- cat currentclgtree.txt >> coverage.txt
+- go test -race -covermode=atomic -coverprofile=currentdestination.txt ./current/destination
+- cat currentdestination.txt >> coverage.txt
+- go test -race -covermode=atomic -coverprofile=currentexpectation.txt ./current/expectation
+- cat currentexpectation.txt >> coverage.txt
+- go test -race -covermode=atomic -coverprofile=currentsession.txt ./current/session
+- cat currentsession.txt >> coverage.txt
+- go test -race -covermode=atomic -coverprofile=currentsource.txt ./current/source
+- cat currentsource.txt >> coverage.txt
+- go test -race -covermode=atomic -coverprofile=currenttrial.txt ./current/trial
+- cat currenttrial.txt >> coverage.txt
+- go test -race -covermode=atomic -coverprofile=firstbehaviour.txt ./first/behaviour
+- cat firstbehaviour.txt >> coverage.txt
+- go test -race -covermode=atomic -coverprofile=firstinformation.txt ./first/information
+- cat firstinformation.txt >> coverage.txt
 
 notifications:
   email: false
@@ -21,3 +35,6 @@ notifications:
 branches:
   only:
     - master
+
+after_success:
+- bash <(curl -s https://codecov.io/bash)

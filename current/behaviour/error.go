@@ -1,4 +1,4 @@
-package context
+package behaviour
 
 import (
 	"fmt"
@@ -22,9 +22,9 @@ func maskAnyf(err error, f string, v ...interface{}) error {
 	return newErr
 }
 
-var invalidConfigError = errgo.New("invalid config")
+var invalidExecutionError = errgo.New("invalid execution")
 
-// IsInvalidConfig asserts invalidConfigError.
-func IsInvalidConfig(err error) bool {
-	return errgo.Cause(err) == invalidConfigError
+// IsInvalidExecution asserts invalidExecutionError.
+func IsInvalidExecution(err error) bool {
+	return errgo.Cause(err) == invalidExecutionError
 }

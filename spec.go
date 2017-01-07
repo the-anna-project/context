@@ -1,9 +1,14 @@
 package context
 
 import (
-	"github.com/the-anna-project/context/spec"
+	nativecontext "context"
+	"encoding/json"
 )
 
-// Context is a simple redirect to the context specification. That aims to
-// provide a simpler interface for clients using these context packages.
-type Context spec.Context
+type Context interface {
+	DeleteValue(key interface{})
+	nativecontext.Context
+	json.Marshaler
+	json.Unmarshaler
+	SetValue(key, value interface{})
+}
