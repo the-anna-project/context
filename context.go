@@ -35,7 +35,7 @@ func New(config Config) (Context, error) {
 
 	newContext := &context{
 		// Internals.
-		storage: map[interface{}]interface{}{},
+		Storage: map[string]interface{}{},
 
 		// Settings.
 		context: config.Context,
@@ -46,18 +46,18 @@ func New(config Config) (Context, error) {
 
 type context struct {
 	// Internals.
-	storage map[interface{}]interface{}
+	Storage map[string]interface{} `json:"storage"`
 
 	// Settings.
-	context nativecontext.Context
+	context nativecontext.Context `json:"-"`
 }
 
 func (c *context) Deadline() (time.Time, bool) {
 	return c.context.Deadline()
 }
 
-func (c *context) DeleteValue(key interface{}) {
-	delete(c.storage, key)
+func (c *context) DeleteValue(key string) {
+	delete(c.Storage, key)
 }
 
 func (c *context) Done() <-chan struct{} {
@@ -99,12 +99,12 @@ func (c *context) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *context) SetValue(key, value interface{}) {
-	c.storage[key] = value
+func (c *context) SetValue(key string, value interface{}) {
+	c.Storage[key] = value
 }
 
-func (c *context) Value(key interface{}) interface{} {
-	v, ok := c.storage[key]
+func (c *context) Value(key string) interface{} {
+	v, ok := c.Storage[key]
 	if ok {
 		return v
 	}

@@ -4,11 +4,8 @@ package trial
 
 import (
 	"github.com/the-anna-project/context"
+	"github.com/the-anna-project/gopkg"
 )
-
-// key is an unexported type for keys defined in this package. This prevents
-// collisions with keys defined in other packages.
-type key string
 
 // Value is the context value being managed by this package.
 type Value struct {
@@ -30,12 +27,12 @@ var (
 	// valueKey is the key for context values in
 	// github.com/the-anna-project/context.Context. Clients use trial.NewContext
 	// and trial.FromContext instead of using this key directly.
-	valueKey key = "current-trial"
+	valueKey = gopkg.String()
 
 	// restoreKey is the key for restoring context values in
 	// github.com/the-anna-project/context.Context. Clients use trial.Disable and
 	// trial.Restore instead of using this key directly.
-	restoreKey key = "restore-current-trial"
+	restoreKey = gopkg.String() + "/restore"
 )
 
 // Disable removes the context value being stored using valueKey and backs it up

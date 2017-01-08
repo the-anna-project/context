@@ -4,11 +4,8 @@ package tree
 
 import (
 	"github.com/the-anna-project/context"
+	"github.com/the-anna-project/gopkg"
 )
-
-// key is an unexported type for keys defined in this package. This prevents
-// collisions with keys defined in other packages.
-type key string
 
 // Value is the context value being managed by this package.
 type Value struct {
@@ -30,12 +27,12 @@ var (
 	// valueKey is the key for context values in
 	// github.com/the-anna-project/context.Context. Clients use tree.NewContext
 	// and tree.FromContext instead of using this key directly.
-	valueKey key = "current-clg-tree"
+	valueKey = gopkg.String()
 
 	// restoreKey is the key for restoring context values in
 	// github.com/the-anna-project/context.Context. Clients use tree.Disable and
 	// tree.Restore instead of using this key directly.
-	restoreKey key = "restore-current-clg-tree"
+	restoreKey = gopkg.String() + "/restore"
 )
 
 // Disable removes the context value being stored using valueKey and backs it up

@@ -10,6 +10,8 @@ install:
   - go build ./...
 
 script:
+- go test -race -covermode=atomic -coverprofile=context.txt
+- cat context.txt >> coverage.txt
 - go test -race -covermode=atomic -coverprofile=currentbehaviour.txt ./current/behaviour
 - cat currentbehaviour.txt >> coverage.txt
 - go test -race -covermode=atomic -coverprofile=currentclgtree.txt ./current/clg/tree

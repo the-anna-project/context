@@ -5,24 +5,21 @@ package expectation
 import (
 	"github.com/the-anna-project/context"
 	"github.com/the-anna-project/expectation"
+	"github.com/the-anna-project/gopkg"
 )
-
-// key is an unexported type for keys defined in this package. This prevents
-// collisions with keys defined in other packages.
-type key string
 
 var (
 	// valueKey is the key for context values in
 	// github.com/the-anna-project/context.Context. Clients use
 	// expectation.NewContext and expectation.FromContext instead of using this
 	// key directly.
-	valueKey key = "current-expectation"
+	valueKey = gopkg.String()
 
 	// restoreKey is the key for restoring context values in
 	// github.com/the-anna-project/context.Context. Clients use
 	// expectation.Disable and expectation.Restore instead of using this key
 	// directly.
-	restoreKey key = "restore-current-expectation"
+	restoreKey = gopkg.String() + "/restore"
 )
 
 // Disable removes the context value being stored using valueKey and backs it up

@@ -6,11 +6,8 @@ import (
 	"reflect"
 
 	"github.com/the-anna-project/context"
+	"github.com/the-anna-project/gopkg"
 )
-
-// key is an unexported type for keys defined in this package. This prevents
-// collisions with keys defined in other packages.
-type key string
 
 // Value is the context value being managed by this package.
 type Value struct {
@@ -37,12 +34,12 @@ var (
 	// valueKey is the key for context values in
 	// github.com/the-anna-project/context.Context. Clients use source.NewContext
 	// and source.FromContext instead of using this key directly.
-	valueKey key = "current-source"
+	valueKey = gopkg.String()
 
 	// restoreKey is the key for restoring context values in
 	// github.com/the-anna-project/context.Context. Clients use source.Disable and
 	// source.Restore instead of using this key directly.
-	restoreKey key = "restore-current-source"
+	restoreKey = gopkg.String() + "/restore"
 )
 
 // Disable removes the context value being stored using valueKey and backs it up
