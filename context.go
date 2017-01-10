@@ -6,6 +6,7 @@ package context
 import (
 	nativecontext "context"
 	"encoding/json"
+	"sync"
 	"time"
 )
 
@@ -33,12 +34,14 @@ func New(config Config) (Context, error) {
 		return nil, maskAnyf(invalidConfigError, "context must not be empty")
 	}
 
+	ctx, cancelFunc := nativecontext.WithCancel(config.Context)
+
 	newContext := &context{
 		// Internals.
-		Storage: map[string]interface{}{},
-
-		// Settings.
-		context: config.Context,
+		CancelFunc: cancelFunc,
+		CancelOnce: sync.Once{},
+		Context:    ctx,
+		Storage:    map[string]interface{}{},
 	}
 
 	return newContext, nil
@@ -46,14 +49,20 @@ func New(config Config) (Context, error) {
 
 type context struct {
 	// Internals.
-	Storage map[string]interface{} `json:"storage"`
+	CancelFunc func()                 `json:"-"`
+	CancelOnce sync.Once              `json:"-"`
+	Context    nativecontext.Context  `json:"-"`
+	Storage    map[string]interface{} `json:"storage"`
+}
 
-	// Settings.
-	context nativecontext.Context `json:"-"`
+func (c *context) Cancel() {
+	c.CancelOnce.Do(func() {
+		c.CancelFunc()
+	})
 }
 
 func (c *context) Deadline() (time.Time, bool) {
-	return c.context.Deadline()
+	return c.Context.Deadline()
 }
 
 func (c *context) DeleteValue(key string) {
@@ -61,11 +70,11 @@ func (c *context) DeleteValue(key string) {
 }
 
 func (c *context) Done() <-chan struct{} {
-	return c.context.Done()
+	return c.Context.Done()
 }
 
 func (c *context) Err() error {
-	return c.context.Err()
+	return c.Context.Err()
 }
 
 func (c *context) MarshalJSON() ([]byte, error) {

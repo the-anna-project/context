@@ -21,6 +21,7 @@ import (
 //     github.com/the-anna-project/gopkg
 //
 type Context interface {
+	Cancel()
 	Deadline() (time.Time, bool)
 	DeleteValue(key string)
 	Done() <-chan struct{}
