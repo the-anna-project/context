@@ -2,8 +2,10 @@ package context
 
 import (
 	"bytes"
+	nativecontext "context"
 	"encoding/json"
 	"testing"
+	"time"
 )
 
 func Test_JSON(t *testing.T) {
@@ -52,6 +54,59 @@ func Test_JSON(t *testing.T) {
 	}
 	if v != "bar" {
 		t.Fatal("expected", "bar", "got", v)
+	}
+}
+
+func Test_Cancel(t *testing.T) {
+	ctx := testNewContext(t)
+
+	select {
+	case <-time.After(5 * time.Millisecond):
+		// Here a timeout should happen because the context was not yet canceled.
+	case <-ctx.Done():
+		t.Fatal("expected", "timeout", "got", "cancel")
+	}
+
+	// Canceling the context should cause the created context to be canceled.
+	ctx.Cancel()
+
+	select {
+	case <-time.After(5 * time.Millisecond):
+		t.Fatal("expected", "cancel", "got", "timeout")
+	case <-ctx.Done():
+		// The test was successful when the created context was canceled on
+		// cancelation.
+	}
+}
+
+func Test_Cancel_Underlying(t *testing.T) {
+	nativeCtx, cancelFunc := nativecontext.WithCancel(nativecontext.Background())
+
+	config := DefaultConfig()
+	config.Context = nativeCtx
+	ctx, err := New(config)
+	if err != nil {
+		t.Fatal("expected", nil, "got", err)
+	}
+
+	select {
+	case <-time.After(5 * time.Millisecond):
+		// Here a timeout should happen because the underlying context was not yet
+		// canceled.
+	case <-ctx.Done():
+		t.Fatal("expected", "timeout", "got", "cancel")
+	}
+
+	// Canceling the native context should cause the created context to be
+	// canceled, because the native context is configured as underlying context.
+	cancelFunc()
+
+	select {
+	case <-time.After(5 * time.Millisecond):
+		t.Fatal("expected", "cancel", "got", "timeout")
+	case <-ctx.Done():
+		// The test was successful when the created context was canceled on
+		// cancelation of the configured native context.
 	}
 }
 
