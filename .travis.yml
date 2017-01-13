@@ -24,8 +24,8 @@ script:
 - cat currentsession.txt >> coverage.txt
 - go test -race -covermode=atomic -coverprofile=currentsource.txt ./current/source
 - cat currentsource.txt >> coverage.txt
-- go test -race -covermode=atomic -coverprofile=currenttrial.txt ./current/trial
-- cat currenttrial.txt >> coverage.txt
+- go test -race -covermode=atomic -coverprofile=currentstage.txt ./current/stage
+- cat currentstage.txt >> coverage.txt
 - go test -race -covermode=atomic -coverprofile=firstbehaviour.txt ./first/behaviour
 - cat firstbehaviour.txt >> coverage.txt
 - go test -race -covermode=atomic -coverprofile=firstinformation.txt ./first/information

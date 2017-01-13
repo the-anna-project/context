@@ -1,37 +1,68 @@
-// Package trial stores and accesses the values defined in this package in
+// Package stage stores and accesses the values defined in this package in
 // and from a github.com/the-anna-project/context.Context.
-package trial
+package stage
 
 import (
 	"github.com/the-anna-project/context"
 	"github.com/the-anna-project/gopkg"
 )
 
+// state is an unexported type for stage states defined in this package. This
+// prevents collisions with keys defined in other packages.
+type state string
+
+const (
+	Failure state = "failure"
+	Replay  state = "replay"
+	Success state = "success"
+	Trial   state = "trial"
+)
+
 // Value is the context value being managed by this package.
 type Value struct {
-	// Scope represents the scope of the current trial.
-	Scope string `json:"scope"`
+	// State expresses the state of the current stage.
+	State state `json:"state"`
 }
 
 // Equals checks whether the properties of the current value equals the
 // properties of the given value.
 func (v Value) Equals(other Value) bool {
-	if v.Scope != other.Scope {
+	if v.State != other.State {
 		return false
 	}
 
 	return true
 }
 
+// Failure checks whether the state of the current stage is Failure.
+func (v Value) Failure() bool {
+	return v.State == Failure
+}
+
+// Replay checks whether the state of the current stage is Replay.
+func (v Value) Replay() bool {
+	return v.State == Replay
+}
+
+// Success checks whether the state of the current stage is Success.
+func (v Value) Success() bool {
+	return v.State == Success
+}
+
+// Trial checks whether the state of the current stage is Trial.
+func (v Value) Trial() bool {
+	return v.State == Trial
+}
+
 var (
 	// valueKey is the key for context values in
-	// github.com/the-anna-project/context.Context. Clients use trial.NewContext
-	// and trial.FromContext instead of using this key directly.
+	// github.com/the-anna-project/context.Context. Clients use stage.NewContext
+	// and stage.FromContext instead of using this key directly.
 	valueKey = gopkg.String()
 
 	// restoreKey is the key for restoring context values in
-	// github.com/the-anna-project/context.Context. Clients use trial.Disable and
-	// trial.Restore instead of using this key directly.
+	// github.com/the-anna-project/context.Context. Clients use stage.Disable and
+	// stage.Restore instead of using this key directly.
 	restoreKey = gopkg.String() + "/restore"
 )
 
@@ -39,14 +70,14 @@ var (
 // using restoreKey.
 func Disable(ctx context.Context) context.Context {
 	val, _ := FromContext(ctx)
-	ctx.SetValue(restoreKey, val)
-	ctx.DeleteValue(valueKey)
+	ctx.Create(restoreKey, val)
+	ctx.Delete(valueKey)
 	return ctx
 }
 
 // FromContext returns the context value stored in ctx, if any.
 func FromContext(ctx context.Context) (Value, bool) {
-	val, ok := ctx.Value(valueKey).(Value)
+	val, ok := ctx.Search(valueKey).(Value)
 	return val, ok
 }
 
@@ -55,11 +86,11 @@ func FromContext(ctx context.Context) (Value, bool) {
 func IsDisabled(ctx context.Context) bool {
 	var ok bool
 
-	_, ok = ctx.Value(valueKey).(Value)
+	_, ok = ctx.Search(valueKey).(Value)
 	if ok {
 		return false
 	}
-	_, ok = ctx.Value(restoreKey).(Value)
+	_, ok = ctx.Search(restoreKey).(Value)
 	if !ok {
 		return false
 	}
@@ -70,7 +101,7 @@ func IsDisabled(ctx context.Context) bool {
 // NewContext returns a new github.com/the-anna-project/context.Context that
 // carries the context value val.
 func NewContext(ctx context.Context, val Value) context.Context {
-	ctx.SetValue(valueKey, val)
+	ctx.Create(valueKey, val)
 	return ctx
 }
 
@@ -98,8 +129,8 @@ func NewContextFromContexts(ctx context.Context, ctxs []context.Context) (contex
 // Restore sets the context value using the value being backed up by a previous
 // call to Disable.
 func Restore(ctx context.Context) context.Context {
-	val, _ := ctx.Value(restoreKey).(Value)
-	ctx.SetValue(valueKey, val)
-	ctx.DeleteValue(restoreKey)
+	val, _ := ctx.Search(restoreKey).(Value)
+	ctx.Create(valueKey, val)
+	ctx.Delete(restoreKey)
 	return ctx
 }

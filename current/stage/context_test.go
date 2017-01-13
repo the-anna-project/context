@@ -1,4 +1,4 @@
-package trial
+package stage
 
 import (
 	"testing"
@@ -186,6 +186,6 @@ func testNewContexts(t *testing.T) []context.Context {
 
 func testNewValue(t *testing.T) Value {
 	return Value{
-		Scope: "scope",
+		State: "state",
 	}
 }

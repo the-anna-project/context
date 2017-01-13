@@ -61,11 +61,15 @@ func (c *context) Cancel() {
 	})
 }
 
+func (c *context) Create(key string, value interface{}) {
+	c.Storage[key] = value
+}
+
 func (c *context) Deadline() (time.Time, bool) {
 	return c.Context.Deadline()
 }
 
-func (c *context) DeleteValue(key string) {
+func (c *context) Delete(key string) {
 	delete(c.Storage, key)
 }
 
@@ -108,11 +112,7 @@ func (c *context) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *context) SetValue(key string, value interface{}) {
-	c.Storage[key] = value
-}
-
-func (c *context) Value(key string) interface{} {
+func (c *context) Search(key string) interface{} {
 	v, ok := c.Storage[key]
 	if ok {
 		return v

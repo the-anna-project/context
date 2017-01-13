@@ -22,15 +22,15 @@ import (
 //
 type Context interface {
 	Cancel()
+	// Create stores the given key/value pair within the current context. In case
+	// a key is provided that already exists, this key's value will be overwritten
+	// with the given one.
+	Create(key string, value interface{})
 	Deadline() (time.Time, bool)
-	DeleteValue(key string)
+	Delete(key string)
 	Done() <-chan struct{}
 	Err() error
 	json.Marshaler
 	json.Unmarshaler
-	// SetValue stores the given key/value pair within the current context. In
-	// case a key is provided that already exists, this key's value will be
-	// overwritten with the given one.
-	SetValue(key string, value interface{})
-	Value(key string) interface{}
+	Search(key string) interface{}
 }

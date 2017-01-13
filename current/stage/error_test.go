@@ -1,4 +1,4 @@
-package trial
+package stage
 
 import (
 	"fmt"

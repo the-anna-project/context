@@ -8,7 +8,7 @@ import (
 	currentexpectation "github.com/the-anna-project/context/current/expectation"
 	currentsession "github.com/the-anna-project/context/current/session"
 	currentsource "github.com/the-anna-project/context/current/source"
-	currenttrial "github.com/the-anna-project/context/current/trial"
+	currentstage "github.com/the-anna-project/context/current/stage"
 	firstbehaviour "github.com/the-anna-project/context/first/behaviour"
 	firstinformation "github.com/the-anna-project/context/first/information"
 )
@@ -29,7 +29,7 @@ func NewContextFromContexts(ctx context.Context, ctxs []context.Context) (contex
 		currentexpectation.NewContextFromContexts,
 		currentsession.NewContextFromContexts,
 		currentsource.NewContextFromContexts,
-		currenttrial.NewContextFromContexts,
+		currentstage.NewContextFromContexts,
 		firstbehaviour.NewContextFromContexts,
 		firstinformation.NewContextFromContexts,
 	}

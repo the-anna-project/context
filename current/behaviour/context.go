@@ -58,14 +58,14 @@ var (
 // using restoreKey.
 func Disable(ctx context.Context) context.Context {
 	val, _ := FromContext(ctx)
-	ctx.SetValue(restoreKey, val)
-	ctx.DeleteValue(valueKey)
+	ctx.Create(restoreKey, val)
+	ctx.Delete(valueKey)
 	return ctx
 }
 
 // FromContext returns the context value stored in ctx, if any.
 func FromContext(ctx context.Context) (Value, bool) {
-	val, ok := ctx.Value(valueKey).(Value)
+	val, ok := ctx.Search(valueKey).(Value)
 	return val, ok
 }
 
@@ -74,11 +74,11 @@ func FromContext(ctx context.Context) (Value, bool) {
 func IsDisabled(ctx context.Context) bool {
 	var ok bool
 
-	_, ok = ctx.Value(valueKey).(Value)
+	_, ok = ctx.Search(valueKey).(Value)
 	if ok {
 		return false
 	}
-	_, ok = ctx.Value(restoreKey).(Value)
+	_, ok = ctx.Search(restoreKey).(Value)
 	if !ok {
 		return false
 	}
@@ -89,7 +89,7 @@ func IsDisabled(ctx context.Context) bool {
 // NewContext returns a new github.com/the-anna-project/context.Context that
 // carries the context value val.
 func NewContext(ctx context.Context, val Value) context.Context {
-	ctx.SetValue(valueKey, val)
+	ctx.Create(valueKey, val)
 	return ctx
 }
 
@@ -117,8 +117,8 @@ func NewContextFromContexts(ctx context.Context, ctxs []context.Context) (contex
 // Restore sets the context value using the value being backed up by a previous
 // call to Disable.
 func Restore(ctx context.Context) context.Context {
-	val, _ := ctx.Value(restoreKey).(Value)
-	ctx.SetValue(valueKey, val)
-	ctx.DeleteValue(restoreKey)
+	val, _ := ctx.Search(restoreKey).(Value)
+	ctx.Create(valueKey, val)
+	ctx.Delete(restoreKey)
 	return ctx
 }
