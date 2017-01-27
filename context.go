@@ -61,6 +61,19 @@ func (c *context) Cancel() {
 	})
 }
 
+func (c *context) Clone() (Context, error) {
+	newContext, err := New(DefaultConfig())
+	if err != nil {
+		return nil, maskAny(err)
+	}
+
+	for k, v := range c.Storage {
+		newContext.(*context).Storage[k] = v
+	}
+
+	return newContext, nil
+}
+
 func (c *context) Create(key string, value interface{}) {
 	c.Storage[key] = value
 }

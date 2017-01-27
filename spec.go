@@ -22,6 +22,7 @@ import (
 //
 type Context interface {
 	Cancel()
+	Clone() (Context, error)
 	// Create stores the given key/value pair within the current context. In case
 	// a key is provided that already exists, this key's value will be overwritten
 	// with the given one.

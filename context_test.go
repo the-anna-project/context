@@ -8,6 +8,54 @@ import (
 	"time"
 )
 
+func Test_Clone(t *testing.T) {
+	ctx1 := testNewContext(t)
+	ctx2, err := ctx1.Clone()
+	if err != nil {
+		t.Fatal("expected", nil, "got", err)
+	}
+
+	// Check that certain keys do not exist.
+	v, ok := ctx1.(*context).Storage["key"]
+	if ok {
+		t.Fatal("expected", false, "got", true)
+	}
+	v, ok = ctx2.(*context).Storage["key"]
+	if ok {
+		t.Fatal("expected", false, "got", true)
+	}
+
+	// Check that certain keys exist.
+	v, ok = ctx1.(*context).Storage["foo"]
+	if !ok {
+		t.Fatal("expected", true, "got", false)
+	}
+	if v.(string) != "bar" {
+		t.Fatal("expected", "bar", "got", v.(string))
+	}
+	v, ok = ctx2.(*context).Storage["foo"]
+	if !ok {
+		t.Fatal("expected", true, "got", false)
+	}
+	if v.(string) != "bar" {
+		t.Fatal("expected", "bar", "got", v.(string))
+	}
+
+	ctx1.Create("key", "val")
+
+	v, ok = ctx1.(*context).Storage["key"]
+	if !ok {
+		t.Fatal("expected", true, "got", false)
+	}
+	if v.(string) != "val" {
+		t.Fatal("expected", "val", "got", v.(string))
+	}
+	v, ok = ctx2.(*context).Storage["key"]
+	if ok {
+		t.Fatal("expected", false, "got", true)
+	}
+}
+
 func Test_JSON(t *testing.T) {
 	// Create new context and attach some information to it.
 	ctx := testNewContext(t)

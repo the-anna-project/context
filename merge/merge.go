@@ -1,3 +1,5 @@
+// Package merge provides merging of a list of contexts to a single context
+// based on specific rules.
 package merge
 
 import (
